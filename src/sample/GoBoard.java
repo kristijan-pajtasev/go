@@ -3,8 +3,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Translate;
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Color;
 
 
@@ -39,8 +37,6 @@ public class GoBoard extends Pane {
 
     }
 
-
-
     // overridden version of the resize method to give the board the correct size
     @Override
     public void resize(double width, double height) {
@@ -62,9 +58,6 @@ public class GoBoard extends Pane {
 
         // we need to reset the sizes and positions of all XOPieces that were placed
         pieceResizeRelocate();
-
-
-
     }
 
     // private method for getting a piece on the board. this will return the board
@@ -91,31 +84,21 @@ public class GoBoard extends Pane {
         final int cellx = (int) (x / cell_width);
         final int celly = (int) (y / cell_height);
 
-
-
         // if the game is not in play then do nothing
-//        if(!in_play)
-//            return;
-//
+        if(!in_play)
+            return;
+
         // if there is a piece already placed then return and do nothing
         if(render[cellx][celly].getPiece() != 0)
             return;
 
-//        // determine what pieces surround the current piece. if there is no opposing
-//        // pieces then a valid move cannot be made.
-//        determineSurrounding(cellx, celly);
-//        if(!adjacentOpposingPiece())
-//            return;
-//
-//        // see if a reverse can be made in any direction if none can be made then return
-//        if(!determineReverse(cellx, celly))
-//            return;
+        if(isSuicidePlace(cellx, celly, current_player)) return;
 
         // at this point we have done all the checks and they have passed so now we can place
         // the piece and perform the reversing also check if the game has ended
-        placeAndReverse(cellx, celly);
+        swapPiece(cellx, celly);
 
-        // if we get to this point then a successful move has been made so swap the
+        // if we get to this point then a successful move has been made so swapPiece the
         // players and update the scores
         swapPlayers();
         updateScores();
@@ -130,17 +113,20 @@ public class GoBoard extends Pane {
             System.out.println("current player is Black");
     }
 
+    private boolean isSuicidePlace(int cellx, int celly, int player) {
+        // TODO: check if is it suicide place
+        return false;
+    }
+
     // public method for resetting the game
     public void resetGame() {
 
         resetRenders();
         initialiseRender();
 
-
         this.current_player = 2;
         this.player1_score = 0;
         this.player2_score = 0;
-
     }
 
     // private method that will reset the renders
@@ -160,6 +146,7 @@ public class GoBoard extends Pane {
 
         //add background color
         background = new Rectangle();
+        // TODO: add background
 //        Image image = new Image("/background.jpg");
 //        ImagePattern imagepattern = new ImagePattern(image);
 //        background.setId("pane");
@@ -224,8 +211,6 @@ public class GoBoard extends Pane {
     // private method for swapping the players
     private void swapPlayers() {
 
-        //not utilizing the opposing variable
-
         if(this.current_player == 1) {
             this.current_player = 2;
         }else {
@@ -253,6 +238,8 @@ public class GoBoard extends Pane {
             }
         }
 
+        // TODO: update label view
+
     }
 
     // private method for resizing and relocating all the pieces
@@ -270,181 +257,25 @@ public class GoBoard extends Pane {
     // private method for determining which pieces surround x,y will update the
     // surrounding array to reflect this
     private void determineSurrounding(final int x, final int y) {
-
-        // value that I will use to iterate on the surrounding array
-        int iteratorX = x;
-        int iteratorY = y;
-
-        // check if the value of the piece is not -1 meaning outside the board or already played
-        if(this.getPiece(x, y) != -1) {
-
-            //the center piece will have an index of 0,0 ; top left -1,-1 bottom right 1,1
-            for(int i = -1; i<=1 ; i++) {
-                //calculating the x value of the piece in surrounding
-                iteratorX = iteratorX + i;
-
-                for(int j =-1; j<=1; j++) {
-                    //calculating the x value of the piece in surrounding and check the type of piece by adding it to surrounding array
-                    iteratorY = iteratorY + j;
-                    surrounding[i+1][j+1] = this.getPiece(iteratorX, iteratorY);
-                    iteratorY = y;
-
-                }
-
-                // initialise iterator x
-                iteratorX = x;
-
-            }
-        }
-
-
+        // todo: implement determing surrounding
     }
 
     // private method for determining if a reverse can be made will update the can_reverse
     // array to reflect the answers will return true if a single reverse is found
     private boolean determineReverse(final int x, final int y) {
-
         boolean reverseChain_exist = false;
-
-        //the center piece will have an index of 0,0 ; top left -1,-1 bottom right 1,1
-        for(int i = -1; i<=1 ; i++) {
-            //set direction dx
-            int dx = i;
-
-            for(int j = -1; j<=1; j++) {
-                //set direction dy
-                int dy= j;
-
-                // set the can_reverse to true or false if the isReverseChain is possible
-                if(dx==0 && dy == 0) {
-                    can_reverse[i+1][j+1] = false;
-                }else {
-                    can_reverse[i+1][j+1] = isReverseChain(x, y, dx, dy, this.current_player);
-                }
-                //System.out.println(can_reverse[i+1][j+1]);
-
-                if(!reverseChain_exist && can_reverse[i+1][j+1]) {
-                    reverseChain_exist = true;
-                }
-
-            }
-
-        }
-
-        // NOTE: this is to keep the compiler happy until you get to this part
+        // todo: check if has anything to swithc
         return reverseChain_exist;
     }
 
-    // private method for determining if a reverse can be made from a position (x,y) for
-    // a player piece in the given direction (dx,dy) returns true if possible
-    // assumes that the first piece has already been checked
-    private boolean isReverseChain(final int x, final int y, final int dx, final int dy, final int player) {
-
-
-        int adjacentX = x+dx;
-        int adjacentY = y+dy;
-        boolean validChain = false;
-
-        if(this.getPiece(adjacentX, adjacentY) != player) {
-
-
-
-            //very bad but could not find a better way
-            while(true) {
-
-                if(this.getPiece(adjacentX, adjacentY) == -1 || this.getPiece(adjacentX, adjacentY) == 0) {
-                    //System.out.println("break. adjacentX : " + adjacentX +  " adjacentY : " + adjacentY);
-                    break;
-                }
-
-                //if in the same direction the adjacent piece is the same
-                if(this.getPiece(adjacentX , adjacentY) == player) {
-
-                    validChain = true;
-                    //System.out.println("Super. adjacentX : " + adjacentX +  " adjacentY : " + adjacentY);
-                    break;
-                }
-
-
-                adjacentX = adjacentX + dx;
-                adjacentY = adjacentY + dy;
-                //System.out.println(" X: " + adjacentX +  " Y : " + adjacentY);
-
-            }
-
-        }
-        // NOTE: this is to keep the compiler happy until you get to this part
-        return validChain;
-
-
-    }
-
-    // private method for determining if any of the surrounding pieces are an opposing
-    // piece. if a single one exists then return true otherwise false
-    private boolean adjacentOpposingPiece() {
-
-        boolean exist = false;
-
-        for(int i =0; i<=2; i++) {
-            for(int j=0; j<=2; j++) {
-
-                if(surrounding[i][j]!= -1) {
-                    //check the surrounding piece are the same as the current player
-                    if(exist == false && surrounding[i][j] != this.current_player) {
-                        exist = true;
-                    }
-                }
-
-            }
-        }
-
-        return exist;
-    }
-
     // private method for placing a piece and reversing pieces
-    private void placeAndReverse(final int x, final int y) {
-
-        GoPiece pieceToPlace = render[x][y];
-        pieceToPlace.setPiece(this.current_player);
-
-//        for(int dx =-1; dx<=1; dx++) {
-//            for(int dy = -1; dy<=1; dy++) {
-//
-//                //Reverse in all direction but not 0,0 which the position of the current piece.
-//                if(!(dx == 0  && dy ==0 )){
-//                    reverseChain(x, y, dx, dy);
-//                }
-//            }
-//        }
-    }
-
-    // private method to reverse a chain
-    private void reverseChain(final int x, final int y, final int dx, final int dy) {
-
-        if(can_reverse[dx + 1][dy + 1] == true) {
-            //System.out.println("yes");
-            //initiate coordinate of the piece that need to be swap
-            int currentX = x + dx;
-            int currentY = y + dy;
-
-            //check if it is an opposite Piece and swap the color
-            while(this.getPiece(currentX, currentY) != this.current_player) {
-                GoPiece pieceToReverse = render[currentX][currentY];
-                pieceToReverse.swapPiece();
-
-                currentX = currentX + dx;
-                currentY = currentY + dy;
-            }
-        }
+    private void swapPiece(final int x, final int y) {
+        render[x][y].setPiece(this.current_player);
     }
 
     // private method that will determine if the end of the game has been reached
     private void determineEndGame() {
-
-
         boolean emptyCell = false;
-//        boolean moreMoves = false;
-//        boolean scoreAboveZero = false;
 
         // check if there is an empty cell
         for(int i = 0; i < render.length ;i++) {
@@ -457,62 +288,12 @@ public class GoBoard extends Pane {
 
             }
         }
-
-
-//        //check if player still has piece on the board
-//        if(player1_score > 0 && player2_score > 0) {
-//            scoreAboveZero = true;
-//        }else {
-//            System.out.println("Game over! you have no more prieces left on the board");
-//        }
-//
-//        //check if both can make a move
-//        if(canMove() == false) {
-//            swapPlayers();
-//            if(canMove() == true) {
-//                moreMoves = true;
-//            }else {
-//                System.out.println("Game over no more move possible on both side");
-//            }
-//        }else {
-//            moreMoves = true;
-//        }
-//
-//
-//        if(emptyCell == false || moreMoves == false || scoreAboveZero == false) {
-//            this.in_play = false;
-//            System.out.println("Game over");
-//            determineWinner();
-//        }
-
-
-
-
     }
 
     // private method to determine if a player has a move available
     private boolean canMove() {
-
         boolean canMove = false;
-
-        for(int i = 0; i < render.length ;i++) {
-            for(int j = 0; j < render[i].length; j++) {
-
-                if(this.render[i][j].getPiece() == 0 && determineReverse(i, j)) {
-                    render[i][j].setPiecegrey();
-                }else if (this.render[i][j].getPiece() == 0 && !determineReverse(i, j)) {
-                    render[i][j].setPiecewhite();
-                }
-
-
-                if(this.render[i][j].getPiece() == 0 && canMove == false) {
-
-                    canMove = determineReverse(i, j);
-                }
-
-            }
-        }
-
+        // todo:  check if empty space exist that is not suicide place
         return canMove;
 
     }
@@ -532,7 +313,6 @@ public class GoBoard extends Pane {
 
     // private method that will initialise everything in the render array
     private void initialiseRender() {
-
         //set the array to null object
         for(int i = 0; i < 7; i++)
             for(int j = 0; j < 7; j++) {
@@ -544,7 +324,6 @@ public class GoBoard extends Pane {
 
 
     // private fields that make the reversi board work
-
     // rectangle that makes the background of the board
     private Rectangle background;
     // arrays for the lines that makeup the horizontal and vertical grid lines
@@ -558,7 +337,6 @@ public class GoBoard extends Pane {
     private GoPiece[][] render;
     // the current player who is playing and who is his opposition
     private int current_player = 2;
-    private int opposing;
     // is the game currently in play
     private boolean in_play = true;
     // current scores of player 1 and player 2
