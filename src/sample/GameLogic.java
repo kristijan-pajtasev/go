@@ -1,9 +1,9 @@
 package sample;
 
 class GameLogic {
-    private GoPiece[][] board;
+    private GoPiece[][] render;
 
     GameLogic(GoPiece[][] board) {
-        this.board = board;
+        this.render = board;
     }
 }
