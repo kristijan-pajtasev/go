@@ -76,7 +76,7 @@ public class GoBoard extends Pane {
         //step 21
         int pieceSelected;
 
-        if(x >= 0 && y >= 0 && x <=7 && y <= 7 ) {
+        if(x >= 0 && y >= 0 && x <7 && y < 7 ) {
             pieceSelected = render[x][y].getPiece();
         }else {
             pieceSelected = -1;
