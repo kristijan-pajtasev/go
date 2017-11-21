@@ -322,6 +322,9 @@ public class GoBoard extends Pane {
 
     }
 
+    private void pass() {
+        // todo: implement setting passCount and check end game, then swap
+    }
 
     // private fields that make the reversi board work
     // rectangle that makes the background of the board
@@ -349,5 +352,6 @@ public class GoBoard extends Pane {
     private int[][] surrounding;
     // 3x3 array that determines if a reverse can be made in any direction
     private boolean[][] can_reverse;
+    private int passCount = 0;
 
 }
