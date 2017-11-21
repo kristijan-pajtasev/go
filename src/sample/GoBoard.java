@@ -407,15 +407,15 @@ public class GoBoard extends Pane {
         GoPiece pieceToPlace = render[x][y];
         pieceToPlace.setPiece(this.current_player);
 
-        for(int dx =-1; dx<=1; dx++) {
-            for(int dy = -1; dy<=1; dy++) {
-
-                //Reverse in all direction but not 0,0 which the position of the current piece.
-                if(!(dx == 0  && dy ==0 )){
-                    reverseChain(x, y, dx, dy);
-                }
-            }
-        }
+//        for(int dx =-1; dx<=1; dx++) {
+//            for(int dy = -1; dy<=1; dy++) {
+//
+//                //Reverse in all direction but not 0,0 which the position of the current piece.
+//                if(!(dx == 0  && dy ==0 )){
+//                    reverseChain(x, y, dx, dy);
+//                }
+//            }
+//        }
     }
 
     // private method to reverse a chain
@@ -443,8 +443,8 @@ public class GoBoard extends Pane {
 
 
         boolean emptyCell = false;
-        boolean moreMoves = false;
-        boolean scoreAboveZero = false;
+//        boolean moreMoves = false;
+//        boolean scoreAboveZero = false;
 
         // check if there is an empty cell
         for(int i = 0; i < render.length ;i++) {
@@ -459,31 +459,31 @@ public class GoBoard extends Pane {
         }
 
 
-        //check if player still has piece on the board
-        if(player1_score > 0 && player2_score > 0) {
-            scoreAboveZero = true;
-        }else {
-            System.out.println("Game over! you have no more prieces left on the board");
-        }
-
-        //check if both can make a move
-        if(canMove() == false) {
-            swapPlayers();
-            if(canMove() == true) {
-                moreMoves = true;
-            }else {
-                System.out.println("Game over no more move possible on both side");
-            }
-        }else {
-            moreMoves = true;
-        }
-
-
-        if(emptyCell == false || moreMoves == false || scoreAboveZero == false) {
-            this.in_play = false;
-            System.out.println("Game over");
-            determineWinner();
-        }
+//        //check if player still has piece on the board
+//        if(player1_score > 0 && player2_score > 0) {
+//            scoreAboveZero = true;
+//        }else {
+//            System.out.println("Game over! you have no more prieces left on the board");
+//        }
+//
+//        //check if both can make a move
+//        if(canMove() == false) {
+//            swapPlayers();
+//            if(canMove() == true) {
+//                moreMoves = true;
+//            }else {
+//                System.out.println("Game over no more move possible on both side");
+//            }
+//        }else {
+//            moreMoves = true;
+//        }
+//
+//
+//        if(emptyCell == false || moreMoves == false || scoreAboveZero == false) {
+//            this.in_play = false;
+//            System.out.println("Game over");
+//            determineWinner();
+//        }
 
 
 
