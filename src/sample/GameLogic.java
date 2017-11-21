@@ -1,8 +1,9 @@
 package sample;
 
-public class GameLogic {
+class GameLogic {
     private GoPiece[][] board;
-    public GameLogic(GoPiece[][] board) {
+
+    GameLogic(GoPiece[][] board) {
         this.board = board;
     }
 }

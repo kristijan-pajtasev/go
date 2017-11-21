@@ -28,6 +28,7 @@ public class GoBoard extends Pane {
 
         //initialise render
         initialiseRender();
+        gameLogic = new GameLogic(render);
 
         //initialize render
         initialiseLinesBackground();
@@ -353,5 +354,6 @@ public class GoBoard extends Pane {
     // 3x3 array that determines if a reverse can be made in any direction
     private boolean[][] can_reverse;
     private int passCount = 0;
+    private GameLogic gameLogic;
 
 }
