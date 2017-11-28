@@ -1,5 +1,8 @@
 package sample;
 
+import java.util.HashSet;
+import java.util.Set;
+
 class GameLogic implements GameLogicInterface {
     private GoPiece[][] render;
     private int player1_score, player2_score;
@@ -49,11 +52,45 @@ class GameLogic implements GameLogicInterface {
 
     @Override
     public void placePiece(int x, int y, int player) throws Exception{
-        if(getPiece(x, y).isEmpty()) {
-            getPiece(x, y).setPiece(player);
-        } else {
-            throw new Exception("Place is taken");
+        if(!getPiece(x, y).isEmpty()) throw new Exception("Place is taken");
+
+        GoPiece selectedPiece = getPiece(x, y);
+        Set<GoPiece> patch = buildPatch(selectedPiece, player);
+
+        selectedPiece.setPiece(player);
+    }
+
+    private Set<GoPiece> buildPatch(GoPiece origin, int player) {
+        Set<GoPiece> patch = new HashSet<>();
+        buildPatch(origin, patch, player);
+        return patch;
+    }
+
+    private void buildPatch(GoPiece origin, Set<GoPiece> patch, int player) {
+        if(patch.contains(origin)) return;
+        patch.add(origin);
+        int x = origin.getX();
+        int y = origin.getY();
+
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPlayer() == player) {
+            buildPatch(getPiece(x - 1, y), patch, player);
         }
+
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPlayer() == player) {
+            buildPatch(getPiece(x + 1, y), patch, player);
+        }
+
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPlayer() == player) {
+            buildPatch(getPiece(x, y - 1), patch, player);
+        }
+
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPlayer() == player) {
+            buildPatch(getPiece(x, y + 1), patch, player);
+        }
+    }
+
+    private boolean isValidIndex(int x, int y) {
+        return x >= 0 && y >= 0 && x < render.length && y < render[0].length;
     }
 
     public GoPiece getPiece(int x, int y) {

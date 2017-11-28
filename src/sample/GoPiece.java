@@ -118,6 +118,18 @@ class GoPiece extends Group {
         return this.player == 0;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getPlayer() {
+        return player;
+    }
+
     // private fields
     private int player;		// the player that this piece belongs to
     private Ellipse piece;	// ellipse representing the player's piece
