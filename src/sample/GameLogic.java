@@ -48,8 +48,8 @@ class GameLogic implements GameLogicInterface {
     }
 
     @Override
-    public void placePiece(int x, int y) {
-        getPiece(x, y).setPiece(1);
+    public void placePiece(int x, int y, int player) {
+        getPiece(x, y).setPiece(player);
     }
 
     public GoPiece getPiece(int x, int y) {

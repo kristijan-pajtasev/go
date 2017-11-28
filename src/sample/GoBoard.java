@@ -89,7 +89,12 @@ public class GoBoard extends Pane {
         if(!in_play)
             return;
 
-        gameLogic.placePiece(cellx, celly);
+        try {
+            gameLogic.placePiece(cellx, celly, current_player);
+            swapPlayers();
+        } catch (Exception e) {
+
+        }
         // if there is a piece already placed then return and do nothing
 //        if(render[cellx][celly].getPiece() != 0)
 //            return;
@@ -210,13 +215,7 @@ public class GoBoard extends Pane {
 
     // private method for swapping the players
     private void swapPlayers() {
-
-        if(this.current_player == 1) {
-            this.current_player = 2;
-        }else {
-            this.current_player = 1;
-        }
-
+        this.current_player = current_player == 1 ? 2 : 1;
     }
 
     // private method for updating the player scores

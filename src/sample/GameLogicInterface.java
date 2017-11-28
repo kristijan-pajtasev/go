@@ -6,7 +6,7 @@ package sample;
  */
 public interface GameLogicInterface {
 
-    public void placePiece(int x, int y);
+    public void placePiece(int x, int y, int player);
 
     public GoPiece getPiece(int x, int y);
 
