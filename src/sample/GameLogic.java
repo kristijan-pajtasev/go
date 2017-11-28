@@ -62,9 +62,25 @@ class GameLogic implements GameLogicInterface {
         selectedPiece.setPiece(player);
     }
 
-    public boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
+    public boolean hasEscapeRoute(GoPiece selectedPiece, Set<GoPiece> patch, int player){
+        // todo implement
+        boolean hasEscape = false;
+        patch.forEach((GoPiece g) -> {
+        });
+        return hasEscape;
+    }
+
+    public boolean hasAvailableAdjecent(GoPiece piece) {
         // todo implement
         return false;
+    }
+
+    public boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
+        // todo implement
+        boolean isSuicide = false;
+        patch.forEach((GoPiece g) -> {
+        });
+        return isSuicide;
     }
 
     private Set<GoPiece> buildPatch(GoPiece origin, int player) {
