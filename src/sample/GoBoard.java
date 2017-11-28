@@ -89,29 +89,36 @@ public class GoBoard extends Pane {
         if(!in_play)
             return;
 
+        try {
+            gameLogic.placePiece(cellx, celly, current_player);
+            swapPlayers();
+        } catch (Exception e) {
+
+        }
         // if there is a piece already placed then return and do nothing
-        if(render[cellx][celly].getPiece() != 0)
-            return;
-
-        if(isSuicidePlace(cellx, celly, current_player)) return;
-
-        // at this point we have done all the checks and they have passed so now we can place
-        // the piece and perform the reversing also check if the game has ended
-        swapPiece(cellx, celly);
-
-        // if we get to this point then a successful move has been made so swapPiece the
-        // players and update the scores
-        swapPlayers();
-        updateScores();
-        determineEndGame();
-
-        // print out some information
-        System.out.println("placed at: " + cellx + ", " + celly);
-        System.out.println("White: " + player1_score + " Black: " + player2_score);
-        if(current_player == 1)
-            System.out.println("current player is White");
-        else
-            System.out.println("current player is Black");
+//        if(render[cellx][celly].getPiece() != 0)
+//            return;
+//
+//        if(isSuicidePlace(cellx, celly, current_player)) return;
+//
+//        // at this point we have done all the checks and they have passed so now we can place
+//        // the piece and perform the reversing also check if the game has ended
+//        swapPiece(cellx, celly);
+//
+//        // if we get to this point then a successful move has been made so swapPiece the
+//        // players and update the scores
+//        swapPlayers();
+//        updateScores();
+////        determineEndGame();
+//
+//
+//        // print out some information
+//        System.out.println("placed at: " + cellx + ", " + celly);
+//        System.out.println("White: " + player1_score + " Black: " + player2_score);
+//        if(current_player == 1)
+//            System.out.println("current player is White");
+//        else
+//            System.out.println("current player is Black");
     }
 
     private boolean isSuicidePlace(int cellx, int celly, int player) {
@@ -184,9 +191,6 @@ public class GoBoard extends Pane {
             getChildren().add(horizontal[i]);
             getChildren().add(vertical[i]);
         }
-
-
-
     }
 
     // private method for resizing and relocating the horizontal lines
@@ -211,13 +215,7 @@ public class GoBoard extends Pane {
 
     // private method for swapping the players
     private void swapPlayers() {
-
-        if(this.current_player == 1) {
-            this.current_player = 2;
-        }else {
-            this.current_player = 1;
-        }
-
+        this.current_player = current_player == 1 ? 2 : 1;
     }
 
     // private method for updating the player scores
@@ -251,63 +249,6 @@ public class GoBoard extends Pane {
                 render[i][j].relocate(i * cell_width, j * cell_height);
                 render[i][j].resize(cell_width, cell_height);
             }
-        }
-
-    }
-
-    // private method for determining which pieces surround x,y will update the
-    // surrounding array to reflect this
-    private void determineSurrounding(final int x, final int y) {
-        // todo: implement determing surrounding
-    }
-
-    // private method for determining if a reverse can be made will update the can_reverse
-    // array to reflect the answers will return true if a single reverse is found
-    private boolean determineReverse(final int x, final int y) {
-        boolean reverseChain_exist = false;
-        // todo: check if has anything to swithc
-        return reverseChain_exist;
-    }
-
-    // private method for placing a piece and reversing pieces
-    private void swapPiece(final int x, final int y) {
-        render[x][y].setPiece(this.current_player);
-    }
-
-    // private method that will determine if the end of the game has been reached
-    private void determineEndGame() {
-        boolean emptyCell = false;
-
-        // check if there is an empty cell
-        for(int i = 0; i < render.length ;i++) {
-            for(int j = 0; j < render[i].length; j++) {
-
-                if(this.render[i][j].getPiece() == 0 && emptyCell == false) {
-                    emptyCell = true;
-
-                }
-
-            }
-        }
-    }
-
-    // private method to determine if a player has a move available
-    private boolean canMove() {
-        boolean canMove = false;
-        // todo:  check if empty space exist that is not suicide place
-        return canMove;
-
-    }
-
-    // private method that determines who won the game
-    private void determineWinner() {
-
-        if(player1_score > player2_score) {
-            System.out.println("White wins!");
-        }else if(player1_score < player2_score) {
-            System.out.println("Black wins!");
-        }else {
-            System.out.println("Draw");
         }
 
     }
@@ -354,6 +295,6 @@ public class GoBoard extends Pane {
     // 3x3 array that determines if a reverse can be made in any direction
     private boolean[][] can_reverse;
     private int passCount = 0;
-    private GameLogic gameLogic;
+    private GameLogicInterface gameLogic;
 
 }
