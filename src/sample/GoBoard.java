@@ -253,13 +253,6 @@ public class GoBoard extends Pane {
 
     }
 
-    // private method for placing a piece and reversing pieces
-    private void swapPiece(final int x, final int y) {
-        render[x][y].setPiece(this.current_player);
-    }
-
-
-
     // private method that will initialise everything in the render array
     private void initialiseRender() {
         //set the array to null object

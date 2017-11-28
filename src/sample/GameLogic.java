@@ -80,4 +80,9 @@ class GameLogic implements GameLogicInterface {
         }
 
     }
+
+    // private method for placing a piece and reversing pieces
+    private void swapPiece(final int x, final int y, int player) {
+        render[x][y].setPiece(player);
+    }
 }
