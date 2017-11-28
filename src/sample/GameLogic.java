@@ -57,7 +57,14 @@ class GameLogic implements GameLogicInterface {
         GoPiece selectedPiece = getPiece(x, y);
         Set<GoPiece> patch = buildPatch(selectedPiece, player);
 
+        if(!isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
+
         selectedPiece.setPiece(player);
+    }
+
+    public boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
+        // todo implement
+        return false;
     }
 
     private Set<GoPiece> buildPatch(GoPiece origin, int player) {
