@@ -9,13 +9,11 @@ import javafx.scene.transform.Translate;
 //class definition for a Go piece
 class GoPiece extends Group {
     // default constructor for the class
-    int x, y;
+    private int x, y;
 
     public GoPiece(int x, int y, int player) {
         this.x = x;
         this.y = y;
-        // create a new translate object and take a copy of the player
-        //step 15
         t = new Translate();
         this.player = player;
         piece = new Ellipse();
@@ -45,8 +43,6 @@ class GoPiece extends Group {
     // overridden version of the relocate method to position the piece correctly
     @Override
     public void relocate(double x, double y) {
-
-        //step 17
         super.relocate(x, y);
         t.setX(x); t.setY(y);
 
