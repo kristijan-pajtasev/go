@@ -48,8 +48,12 @@ class GameLogic implements GameLogicInterface {
     }
 
     @Override
-    public void placePiece(int x, int y, int player) {
-        getPiece(x, y).setPiece(player);
+    public void placePiece(int x, int y, int player) throws Exception{
+        if(getPiece(x, y).isEmpty()) {
+            getPiece(x, y).setPiece(player);
+        } else {
+            throw new Exception("Place is taken");
+        }
     }
 
     public GoPiece getPiece(int x, int y) {
@@ -70,7 +74,6 @@ class GameLogic implements GameLogicInterface {
 
     // private method that determines who won the game
     public String determineWinner() {
-
         if(player1_score > player2_score) {
             return "White wins!";
         }else if(player1_score < player2_score) {

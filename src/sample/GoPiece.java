@@ -113,6 +113,11 @@ class GoPiece extends Group {
         return player_value;
     }
 
+
+    public boolean isEmpty() {
+        return this.player == 0;
+    }
+
     // private fields
     private int player;		// the player that this piece belongs to
     private Ellipse piece;	// ellipse representing the player's piece
