@@ -57,25 +57,38 @@ class GameLogic implements GameLogicInterface {
         GoPiece selectedPiece = getPiece(x, y);
         Set<GoPiece> patch = buildPatch(selectedPiece, player);
 
+        if(hasEscapeRoute(selectedPiece, patch)) {
+            selectedPiece.setPiece(player);
+        }
         if(!isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
 
-        selectedPiece.setPiece(player);
+
     }
 
-    public boolean hasEscapeRoute(GoPiece selectedPiece, Set<GoPiece> patch, int player){
-        // todo implement
-        boolean hasEscape = false;
-        patch.forEach((GoPiece g) -> {
-        });
-        return hasEscape;
+    private boolean hasEscapeRoute(GoPiece selectedPiece, Set<GoPiece> patch){
+        boolean hasEscapeRoute = false;
+        for(GoPiece piece: patch) {
+            hasEscapeRoute = hasAvailableAdjacent(piece, selectedPiece) ? true : hasEscapeRoute;
+        }
+        return hasEscapeRoute;
     }
 
-    public boolean hasAvailableAdjecent(GoPiece piece) {
-        // todo implement
-        return false;
+    private boolean hasAvailableAdjacent(GoPiece piece, GoPiece origin) {
+        int x = piece.getX();
+        int y = piece.getY();
+        boolean hasAvailableAdjacent = false;
+        if(isValidIndex(x - 1, y) && isAvailablePlace(getPiece(x - 1, y), origin)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x + 1, y) && isAvailablePlace(getPiece(x + 1, y), origin)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x, y - 1) && isAvailablePlace(getPiece(x, y - 1), origin)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x, y + 1) && isAvailablePlace(getPiece(x, y + 1), origin)) { hasAvailableAdjacent = true; }
+        return hasAvailableAdjacent;
     }
 
-    public boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
+    private boolean isAvailablePlace(GoPiece piece, GoPiece origin) {
+        return piece.getPiece() == 0 && piece != origin;
+    }
+
+    private boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
         // todo implement
         boolean isSuicide = false;
         patch.forEach((GoPiece g) -> {
