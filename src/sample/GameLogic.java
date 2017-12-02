@@ -92,10 +92,22 @@ class GameLogic implements GameLogicInterface {
 
     private boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
         // todo implement
-        boolean isSuicide = false;
-//        patch.forEach((GoPiece g) -> {
-//        });
-        return isSuicide;
+        boolean isNextToOpponent = false;
+        for(GoPiece piece: patch) {
+            isNextToOpponent = isNextOfOpponent(piece, selectedPiece, player) || isNextToOpponent;
+        }
+        return isNextToOpponent;
+    }
+
+    private boolean isNextOfOpponent(GoPiece piece, GoPiece selectedPiece, int player) {
+        int x = piece.getX();
+        int y = piece.getY();
+        boolean isNextOfOpponent = false;
+        if(isValidIndex(x - 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
+        if(isValidIndex(x + 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
+        if(isValidIndex(x, y - 1)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
+        if(isValidIndex(x, y + 1)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
+        return isNextOfOpponent;
     }
 
     private Set<GoPiece> buildPatch(GoPiece origin, int player) {
