@@ -93,7 +93,7 @@ public class GoBoard extends Pane {
             gameLogic.placePiece(cellx, celly, current_player);
             swapPlayers();
         } catch (Exception e) {
-
+            System.out.println(e.toString());
         }
         // if there is a piece already placed then return and do nothing
 //        if(render[cellx][celly].getPiece() != 0)

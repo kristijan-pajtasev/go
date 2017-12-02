@@ -60,7 +60,7 @@ class GameLogic implements GameLogicInterface {
         if(hasEscapeRoute(selectedPiece, patch)) {
             selectedPiece.setPiece(player);
         }
-        if(!isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
+        if(isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
 
 
     }
@@ -91,8 +91,8 @@ class GameLogic implements GameLogicInterface {
     private boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
         // todo implement
         boolean isSuicide = false;
-        patch.forEach((GoPiece g) -> {
-        });
+//        patch.forEach((GoPiece g) -> {
+//        });
         return isSuicide;
     }
 
