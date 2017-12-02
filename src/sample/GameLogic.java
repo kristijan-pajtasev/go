@@ -59,7 +59,9 @@ class GameLogic implements GameLogicInterface {
 
         if(hasEscapeRoute(selectedPiece, patch)) {
             selectedPiece.setPiece(player);
+            return;
         }
+
         if(isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
 
 
