@@ -59,6 +59,8 @@ Side Control CSS
     -fx-background-radius: 10;
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
 }
 

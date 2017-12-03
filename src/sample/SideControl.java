@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
@@ -21,6 +22,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.animation.RotateTransition;
 import javafx.util.Duration;
 import javafx.animation.ScaleTransition;
+import javafx.scene.effect.InnerShadow;
 
 
 public class SideControl extends VBox {
@@ -123,7 +125,7 @@ public class SideControl extends VBox {
         player_control.add(bt_undo,1,1,1,1);
         player_control.add(bt_offer_draw,2, 1, 1, 1);
 
-        player_control.setHgap(20);
+        player_control.setHgap(15);
         player_control.setVgap(40);
         player_control.setPrefSize(300, 200);
         player_control.setAlignment(Pos.CENTER);
@@ -179,6 +181,13 @@ public class SideControl extends VBox {
         scores.add(piece_2,0,1);
         scores.add(lb_player2_name,1,1);
         scores.add(lb_player2_score,2,1);
+
+        InnerShadow innerShadow = new InnerShadow(BlurType.GAUSSIAN ,Color.color(0.4, 0.4, 0.4), 10,0,2,2);
+//        innerShadow.setOffsetX(2);
+//        innerShadow.setOffsetY(2);
+        //innerShadow.setColor(0,0,2,2Color.color(0.4, 0.4, 0.4));
+
+        scores.setEffect(innerShadow);
 
         scores.setPrefSize(300,160);
 
