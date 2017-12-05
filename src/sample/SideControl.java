@@ -242,7 +242,7 @@ public class SideControl extends VBox {
         if(message.equals("")){
 
             //update score label
-            update_score_label();
+            update_score_label(goControl.update_score());
 
             //update current player label
             update_current_player();
@@ -251,13 +251,18 @@ public class SideControl extends VBox {
 
     }
 
+    //public voi
+
     // update display is no message is passed
     public void update_display(){
         update_display("");
     }
 
     //update score label using the binding
-    public void update_score_label(){
+    public void update_score_label(int [] scores){
+
+        score_1 = scores[0];
+        score_2 = scores[1];
         //update score display
         lb_player1_score.textProperty().bind(new SimpleIntegerProperty(score_1).asString());
         lb_player2_score.textProperty().bind(new SimpleIntegerProperty(score_2).asString());
@@ -284,6 +289,7 @@ public class SideControl extends VBox {
         lb_current_player.textProperty().bind(new SimpleStringProperty(current_Player));
 
     }
+
 
 
     // overridden version of the resize method to give the board the correct size

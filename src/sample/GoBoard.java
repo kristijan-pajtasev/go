@@ -269,6 +269,16 @@ public class GoBoard extends Pane {
         // todo: implement setting passCount and check end game, then swap
     }
 
+    //get scores from game logic
+    public int [] get_score(){
+        int scores []  = new int [2];
+
+        scores[0] = gameLogic.playerOneScore();
+        scores[1] = gameLogic.playerTwoScore();
+
+        return scores;
+    }
+
     // private fields that make the reversi board work
     // rectangle that makes the background of the board
     private Rectangle background;

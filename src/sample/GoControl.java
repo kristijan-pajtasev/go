@@ -24,6 +24,7 @@ public class GoControl extends Control {
             public void handle (MouseEvent event) {
                 try{
                     rb_board.placePiece(event.getX(),event.getY());
+
                     sideControl.update_display();
                 }catch (Exception e){
                     sideControl.update_display(e.getMessage());
@@ -60,6 +61,11 @@ public class GoControl extends Control {
     //the player pass
     public void pass(){
         rb_board.pass();
+    }
+
+    //update score
+    public int [] update_score(){
+        return rb_board.get_score();
     }
 
     // private fields of a go board
