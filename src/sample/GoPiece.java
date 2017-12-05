@@ -36,7 +36,7 @@ class GoPiece extends Group {
 
         // recenter the ellipse// and update the radii
         piece.setCenterX(width / 2); piece.setCenterY(height / 2);
-        piece.setRadiusX(width / 2); piece.setRadiusY(height / 2);
+        piece.setRadiusX(width / 2.2); piece.setRadiusY(height / 2.2);
 
     }
 
