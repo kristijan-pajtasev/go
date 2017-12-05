@@ -130,18 +130,6 @@ class GameLogic implements GameLogicInterface {
         return !hasEscape;
     }
 
-    private boolean isNextOfOpponent(GoPiece piece, GoPiece selectedPiece, int player) {
-        final int x = piece.getX();
-        final int y = piece.getY();
-        final int other = player == 1 ? 1 : 2;
-        boolean isNextOfOpponent = false;
-        if(isValidIndex(x - 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
-        if(isValidIndex(x + 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
-        if(isValidIndex(x, y - 1)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
-        if(isValidIndex(x, y + 1)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
-        return isNextOfOpponent;
-    }
-
     private Set<GoPiece> buildPatch(GoPiece origin, int player) {
         Set<GoPiece> patch = new HashSet<>();
         buildPatch(origin, patch, player);
