@@ -16,7 +16,7 @@ public class Main extends Application {
         go = new GoControl();
         sp_mainlayout.getChildren().add(go);
 
-        side_control = new SideControl();
+        side_control = new SideControl(go);
         sp_mainlayout.getChildren().add(side_control);
     }
 

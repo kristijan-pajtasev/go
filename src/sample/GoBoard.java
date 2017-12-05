@@ -82,7 +82,7 @@ public class GoBoard extends Pane {
     }
 
     // public method that will try to place a piece in the given x,y coordinate
-    public void placePiece(final double x, final double y) {
+    public void placePiece(final double x, final double y) throws Exception{
         // figure out which cell the current player has clicked on
         final int cellx = (int) (x / cell_width);
         final int celly = (int) (y / cell_height);
@@ -91,12 +91,10 @@ public class GoBoard extends Pane {
         if(!in_play)
             return;
 
-        try {
+
             gameLogic.placePiece(cellx, celly, current_player);
             swapPlayers();
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
+
         // if there is a piece already placed then return and do nothing
 //        if(render[cellx][celly].getPiece() != 0)
 //            return;
@@ -266,7 +264,8 @@ public class GoBoard extends Pane {
 
     }
 
-    private void pass() {
+    public void pass() {
+        swapPlayers();
         // todo: implement setting passCount and check end game, then swap
     }
 

@@ -59,9 +59,14 @@ public class SideControl extends VBox {
     private String player2_name = "Player 2";
     private String message =  "";
 
-    SideControl(){
+    private GoControl goControl;
 
+    SideControl(GoControl goControl){
+
+        this.goControl = goControl;
         initGUI();
+        goControl.setSideControl(this);
+
 
     }
 
@@ -113,6 +118,9 @@ public class SideControl extends VBox {
         bt_pass = new Button("Pass");
         bt_offer_draw = new Button("Offer Draw");
         bt_undo = new Button("Undo");
+
+        //style message label
+        lb_message.setId("message");
 
         //styling the button with css
         bt_pass.setId("action_button");
@@ -212,14 +220,13 @@ public class SideControl extends VBox {
 
     //init event
     public void init_event(){
-
-
         // Pass button event
         bt_pass.setOnAction(new EventHandler <ActionEvent>(){
             //call the compute result function calculate the result
             @Override
             public void handle(ActionEvent event) {
-                update_display();
+                update_display("");
+                goControl.pass();
             }
         });
 
@@ -228,40 +235,54 @@ public class SideControl extends VBox {
 
 
     //update display
-    public void update_display(){
+    public void update_display(String message){
+
+        lb_message.textProperty().bind(new SimpleStringProperty(message));
 
         if(message.equals("")){
 
-            //update score display
-            lb_player1_score.textProperty().bind(new SimpleIntegerProperty(score_1).asString());
-            lb_player2_score.textProperty().bind(new SimpleIntegerProperty(score_2).asString());
-
+            //update score label
+            update_score_label();
 
             //update current player label
-            if(lb_current_player.getText().equals(player1_name)){
-                current_Player = player2_name;
-            }else{
-                current_Player = player1_name;
-            }
-
-            //animation while changing player
-            ScaleTransition st = new ScaleTransition(Duration.millis(100), lb_current_player);
-            st.setByX(1f);
-            st.setByY(1f);
-            st.setCycleCount(4);
-            st.setAutoReverse(true);
-
-            st.play();
-            lb_current_player.textProperty().bind(new SimpleStringProperty(current_Player));
-
-        }else{
-
-            lb_message.textProperty().bind(new SimpleStringProperty(message));
+            update_current_player();
 
         }
 
-        //reset message
-        message = "";
+    }
+
+    // update display is no message is passed
+    public void update_display(){
+        update_display("");
+    }
+
+    //update score label using the binding
+    public void update_score_label(){
+        //update score display
+        lb_player1_score.textProperty().bind(new SimpleIntegerProperty(score_1).asString());
+        lb_player2_score.textProperty().bind(new SimpleIntegerProperty(score_2).asString());
+    }
+
+    // update the current player pane
+    public void update_current_player(){
+
+        //update current player label
+        if(lb_current_player.getText().equals(player1_name)){
+            current_Player = player2_name;
+        }else{
+            current_Player = player1_name;
+        }
+
+        //animation while changing player
+        ScaleTransition st = new ScaleTransition(Duration.millis(100), lb_current_player);
+        st.setByX(1f);
+        st.setByY(1f);
+        st.setCycleCount(4);
+        st.setAutoReverse(true);
+
+        st.play();
+        lb_current_player.textProperty().bind(new SimpleStringProperty(current_Player));
+
     }
 
 
