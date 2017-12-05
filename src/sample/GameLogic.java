@@ -73,16 +73,16 @@ class GameLogic implements GameLogicInterface {
         final int other = player == 1 ? 2 : 1;
         final int x = selectedPiece.getX();
         final int y = selectedPiece.getY();
-        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x - 1, y), selectedPiece); }
-        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x + 1, y), selectedPiece); }
-        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y - 1), selectedPiece); }
-        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y + 1), selectedPiece); }
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x - 1, y)); }
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x + 1, y)); }
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y - 1)); }
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y + 1)); }
     }
 
-    private void takeOverIfSurrounded(GoPiece startPiece, GoPiece selectedPiece) {
+    private void takeOverIfSurrounded(GoPiece startPiece) {
         Set<GoPiece> patch = buildPatch(startPiece, startPiece.getPiece());
         if(isPatchSurrounded(patch)){
-            for(GoPiece piece: patch) piece.setPiece(selectedPiece.getPiece());
+            for(GoPiece piece: patch) piece.setPiece(0);
         }
     }
 
