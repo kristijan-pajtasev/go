@@ -57,14 +57,46 @@ class GameLogic implements GameLogicInterface {
         GoPiece selectedPiece = getPiece(x, y);
         Set<GoPiece> patch = buildPatch(selectedPiece, player);
 
-        if(hasEscapeRoute(selectedPiece, patch)) {
-            selectedPiece.setPiece(player);
-            return;
-        }
 
         if(isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
 
+        if(hasEscapeRoute(selectedPiece, patch)) {
+            selectedPiece.setPiece(player);
+        }
 
+        takeOpponentPieces(selectedPiece, player);
+
+
+    }
+
+    private void takeOpponentPieces(GoPiece selectedPiece, int player) {
+        final int other = player == 1 ? 2 : 1;
+        final int x = selectedPiece.getX();
+        final int y = selectedPiece.getY();
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x - 1, y), selectedPiece); }
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x + 1, y), selectedPiece); }
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y - 1), selectedPiece); }
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y + 1), selectedPiece); }
+    }
+
+    private void takeOverIfSurrounded(GoPiece startPiece, GoPiece selectedPiece) {
+        Set<GoPiece> patch = buildPatch(startPiece, startPiece.getPiece());
+        if(isPatchSurrounded(patch)){
+            for(GoPiece piece: patch) piece.setPiece(selectedPiece.getPiece());
+        }
+    }
+
+    private boolean isPatchSurrounded(Set<GoPiece> patch) {
+        boolean isSurrounded = true;
+        for(GoPiece piece: patch) {
+            final int x = piece.getX();
+            final int y = piece.getY();
+            if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == 0) { isSurrounded = false; break; }
+            if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == 0) { isSurrounded = false; break; }
+            if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == 0) { isSurrounded = false; break; }
+            if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == 0) { isSurrounded = false; break; }
+        }
+        return isSurrounded;
     }
 
     private boolean hasEscapeRoute(GoPiece selectedPiece, Set<GoPiece> patch){
@@ -91,22 +123,24 @@ class GameLogic implements GameLogicInterface {
     }
 
     private boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
-        // todo implement
-        boolean isNextToOpponent = false;
-        for(GoPiece piece: patch) {
-            isNextToOpponent = isNextOfOpponent(piece, selectedPiece, player) || isNextToOpponent;
-        }
-        return isNextToOpponent;
+//        boolean isNextToOpponent = false;
+//        for(GoPiece piece: patch) {
+//            isNextToOpponent = isNextOfOpponent(piece, selectedPiece, player) || isNextToOpponent;
+//        }
+        // todo
+        return false;
+//        return isNextToOpponent;
     }
 
     private boolean isNextOfOpponent(GoPiece piece, GoPiece selectedPiece, int player) {
-        int x = piece.getX();
-        int y = piece.getY();
+        final int x = piece.getX();
+        final int y = piece.getY();
+        final int other = player == 1 ? 1 : 2;
         boolean isNextOfOpponent = false;
-        if(isValidIndex(x - 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
-        if(isValidIndex(x + 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
-        if(isValidIndex(x, y - 1)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
-        if(isValidIndex(x, y + 1)) { isNextOfOpponent = getPiece(x, y).getPiece() != player || isNextOfOpponent; }
+        if(isValidIndex(x - 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
+        if(isValidIndex(x + 1, y)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
+        if(isValidIndex(x, y - 1)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
+        if(isValidIndex(x, y + 1)) { isNextOfOpponent = getPiece(x, y).getPiece() == other || isNextOfOpponent; }
         return isNextOfOpponent;
     }
 
