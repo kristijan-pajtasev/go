@@ -9,8 +9,11 @@ import javafx.scene.transform.Translate;
 //class definition for a Go piece
 class GoPiece extends Group {
     // default constructor for the class
-    public GoPiece(int player) {
+    int x, y;
 
+    public GoPiece(int x, int y, int player) {
+        this.x = x;
+        this.y = y;
         // create a new translate object and take a copy of the player
         //step 15
         t = new Translate();

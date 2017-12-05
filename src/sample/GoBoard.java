@@ -260,7 +260,7 @@ public class GoBoard extends Pane {
         //set the array to null object
         for(int i = 0; i < 7; i++)
             for(int j = 0; j < 7; j++) {
-                render[i][j] = new GoPiece(0);
+                render[i][j] = new GoPiece(i, j, 0);
                 getChildren().add(render[i][j]);
             }
 
