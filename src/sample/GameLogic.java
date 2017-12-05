@@ -11,45 +11,6 @@ class GameLogic implements GameLogicInterface {
         this.render = board;
     }
 
-    // private method for determining which pieces surround x,y will update the
-    // surrounding array to reflect this
-    private void determineSurrounding(final int x, final int y) {
-        // todo: implement determing surrounding
-    }
-
-    // private method for determining if a reverse can be made will update the can_reverse
-    // array to reflect the answers will return true if a single reverse is found
-    private boolean determineReverse(final int x, final int y) {
-        boolean reverseChain_exist = false;
-        // todo: check if has anything to swithc
-        return reverseChain_exist;
-    }
-
-    // private method that will determine if the end of the game has been reached
-    private void determineEndGame() {
-        boolean emptyCell = false;
-
-        // check if there is an empty cell
-        for(int i = 0; i < render.length ;i++) {
-            for(int j = 0; j < render[i].length; j++) {
-
-                if(this.render[i][j].getPiece() == 0 && emptyCell == false) {
-                    emptyCell = true;
-
-                }
-
-            }
-        }
-    }
-
-    // private method to determine if a player has a move available
-    private boolean canMove() {
-        boolean canMove = false;
-        // todo:  check if empty space exist that is not suicide place
-        return canMove;
-
-    }
-
     @Override
     public void placePiece(int x, int y, int player) throws Exception{
         if(!getPiece(x, y).isEmpty()) throw new Exception("Place is taken");
@@ -58,15 +19,47 @@ class GameLogic implements GameLogicInterface {
         Set<GoPiece> patch = buildPatch(selectedPiece, player);
 
 
-        if(isSuicideMove(selectedPiece, patch, player))  throw new Exception("This is suicide move");
-
-        if(hasEscapeRoute(selectedPiece, patch)) {
+        if(isSuicideMove(selectedPiece, patch, player)){
+            if(isKOMove(selectedPiece, patch, player)){
+                selectedPiece.setPiece(player);
+            } else throw new Exception("This is suicide move");
+        } else {
             selectedPiece.setPiece(player);
+
         }
+
+//        if(hasEscapeRoute(selectedPiece, patch)) {
+//        }
 
         takeOpponentPieces(selectedPiece, player);
 
 
+    }
+
+    private boolean isKOMove(GoPiece selectedPiece, Set<GoPiece> patch, int player) {
+        // todo
+        boolean isKOMove = false;
+        final int other = player == 1 ? 2 : 1;
+        final int x = selectedPiece.getX();
+        final int y = selectedPiece.getY();
+
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){
+            isKOMove = canTakeoverArea(getPiece(x - 1, y), player) || isKOMove; }
+
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){
+            isKOMove = canTakeoverArea(getPiece(x + 1, y), player) || isKOMove; }
+
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){
+            isKOMove = canTakeoverArea(getPiece(x, y - 1), player) || isKOMove; }
+
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){
+            isKOMove = canTakeoverArea(getPiece(x, y + 1), player) || isKOMove; }// todo current piece
+
+        return isKOMove;
+    }
+
+    private boolean canTakeoverArea(GoPiece piece, int player) {
+        return isPatchSurrounded(buildPatch(piece, piece.getPlayer()));
     }
 
     private void takeOpponentPieces(GoPiece selectedPiece, int player) {
@@ -99,22 +92,22 @@ class GameLogic implements GameLogicInterface {
         return isSurrounded;
     }
 
-    private boolean hasEscapeRoute(GoPiece selectedPiece, Set<GoPiece> patch){
+    private boolean hasEscapeRoute(GoPiece currentPiece, Set<GoPiece> patch, GoPiece selectedPiece){
         boolean hasEscapeRoute = false;
         for(GoPiece piece: patch) {
-            hasEscapeRoute = hasAvailableAdjacent(piece, selectedPiece) || hasEscapeRoute;
+            hasEscapeRoute = hasAvailableAdjacent(piece, currentPiece, selectedPiece) || hasEscapeRoute;
         }
         return hasEscapeRoute;
     }
 
-    private boolean hasAvailableAdjacent(GoPiece piece, GoPiece origin) {
+    private boolean hasAvailableAdjacent(GoPiece piece, GoPiece origin, GoPiece selectedPiece) {
         int x = piece.getX();
         int y = piece.getY();
         boolean hasAvailableAdjacent = false;
-        if(isValidIndex(x - 1, y) && isAvailablePlace(getPiece(x - 1, y), origin)) { hasAvailableAdjacent = true; }
-        if(isValidIndex(x + 1, y) && isAvailablePlace(getPiece(x + 1, y), origin)) { hasAvailableAdjacent = true; }
-        if(isValidIndex(x, y - 1) && isAvailablePlace(getPiece(x, y - 1), origin)) { hasAvailableAdjacent = true; }
-        if(isValidIndex(x, y + 1) && isAvailablePlace(getPiece(x, y + 1), origin)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x - 1, y) && isAvailablePlace(getPiece(x - 1, y), selectedPiece)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x + 1, y) && isAvailablePlace(getPiece(x + 1, y), selectedPiece)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x, y - 1) && isAvailablePlace(getPiece(x, y - 1), selectedPiece)) { hasAvailableAdjacent = true; }
+        if(isValidIndex(x, y + 1) && isAvailablePlace(getPiece(x, y + 1), selectedPiece)) { hasAvailableAdjacent = true; }
         return hasAvailableAdjacent;
     }
 
@@ -125,7 +118,7 @@ class GameLogic implements GameLogicInterface {
     private boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
         boolean hasEscape = false;
         for(GoPiece piece: patch) {
-            hasEscape = hasEscapeRoute(piece, patch) || hasEscape;
+            hasEscape = hasEscapeRoute(piece, patch, selectedPiece) || hasEscape;
         }
         return !hasEscape;
     }
@@ -199,10 +192,5 @@ class GameLogic implements GameLogicInterface {
     @Override
     public int playerTwoScore() {
         return 0;
-    }
-
-    // private method for placing a piece and reversing pieces
-    private void swapPiece(final int x, final int y, int player) {
-        render[x][y].setPiece(player);
     }
 }
