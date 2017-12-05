@@ -191,6 +191,16 @@ class GameLogic implements GameLogicInterface {
 
     }
 
+    @Override
+    public int playerOneScore() {
+        return 0;
+    }
+
+    @Override
+    public int playerTwoScore() {
+        return 0;
+    }
+
     // private method for placing a piece and reversing pieces
     private void swapPiece(final int x, final int y, int player) {
         render[x][y].setPiece(player);
