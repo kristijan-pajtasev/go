@@ -9,6 +9,8 @@ class GameLogic implements GameLogicInterface {
 
     GameLogic(GoPiece[][] board) {
         this.render = board;
+        player1_score = 0;
+        player2_score = 0;
     }
 
     @Override
@@ -66,17 +68,23 @@ class GameLogic implements GameLogicInterface {
         final int other = player == 1 ? 2 : 1;
         final int x = selectedPiece.getX();
         final int y = selectedPiece.getY();
-        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x - 1, y)); }
-        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x + 1, y)); }
-        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y - 1)); }
-        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y + 1)); }
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x - 1, y), player); }
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){ takeOverIfSurrounded(getPiece(x + 1, y), player); }
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y - 1), player); }
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){ takeOverIfSurrounded(getPiece(x, y + 1), player); }
     }
 
-    private void takeOverIfSurrounded(GoPiece startPiece) {
+    private void takeOverIfSurrounded(GoPiece startPiece, int player) {
         Set<GoPiece> patch = buildPatch(startPiece, startPiece.getPiece());
         if(isPatchSurrounded(patch)){
+            updateScore(player, patch.size());
             for(GoPiece piece: patch) piece.setPiece(0);
         }
+    }
+
+    private void updateScore(int player, int increment) {
+        if(player == 1) player1_score += increment;
+        else player2_score += increment;
     }
 
     private boolean isPatchSurrounded(Set<GoPiece> patch) {
@@ -186,11 +194,11 @@ class GameLogic implements GameLogicInterface {
 
     @Override
     public int playerOneScore() {
-        return 0;
+        return player1_score;
     }
 
     @Override
     public int playerTwoScore() {
-        return 0;
+        return player2_score;
     }
 }
