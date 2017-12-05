@@ -70,7 +70,7 @@ class GameLogic implements GameLogicInterface {
     private boolean hasEscapeRoute(GoPiece selectedPiece, Set<GoPiece> patch){
         boolean hasEscapeRoute = false;
         for(GoPiece piece: patch) {
-            hasEscapeRoute = hasAvailableAdjacent(piece, selectedPiece) ? true : hasEscapeRoute;
+            hasEscapeRoute = hasAvailableAdjacent(piece, selectedPiece) || hasEscapeRoute;
         }
         return hasEscapeRoute;
     }
