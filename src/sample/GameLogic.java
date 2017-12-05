@@ -123,13 +123,11 @@ class GameLogic implements GameLogicInterface {
     }
 
     private boolean isSuicideMove(GoPiece selectedPiece, Set<GoPiece> patch, int player){
-//        boolean isNextToOpponent = false;
-//        for(GoPiece piece: patch) {
-//            isNextToOpponent = isNextOfOpponent(piece, selectedPiece, player) || isNextToOpponent;
-//        }
-        // todo
-        return false;
-//        return isNextToOpponent;
+        boolean hasEscape = false;
+        for(GoPiece piece: patch) {
+            hasEscape = hasEscapeRoute(piece, patch) || hasEscape;
+        }
+        return !hasEscape;
     }
 
     private boolean isNextOfOpponent(GoPiece piece, GoPiece selectedPiece, int player) {
