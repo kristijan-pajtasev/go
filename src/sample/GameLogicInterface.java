@@ -16,4 +16,8 @@ public interface GameLogicInterface {
 
     public String determineWinner();
 
+    public int playerOneScore();
+
+    public int playerTwoScore();
+
 }
