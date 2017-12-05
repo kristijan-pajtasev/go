@@ -4,6 +4,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Translate;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 
 
 
@@ -155,11 +157,11 @@ public class GoBoard extends Pane {
         //add background color
         background = new Rectangle();
         // TODO: add background
-//        Image image = new Image("/background.jpg");
-//        ImagePattern imagepattern = new ImagePattern(image);
-//        background.setId("pane");
-//        background.setFill(imagepattern);
-          background.setFill(Color.CYAN);
+        Image image = new Image("/sample/assets/wood.jpg");
+        ImagePattern imagepattern = new ImagePattern(image);
+        background.setId("pane");
+        background.setFill(imagepattern);
+        //background.setFill(Color.CYAN);
 
 
         //Line translate and draw the end line

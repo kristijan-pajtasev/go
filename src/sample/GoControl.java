@@ -13,7 +13,9 @@ public class GoControl extends Control {
         //generate the board game and add Go controls
         setSkin(new GoControlSkin(this));
         rb_board = new GoBoard();
+        rb_board.setPrefSize(600, 600);
         getChildren().add(rb_board);
+
 
         //Mouse event handler
         setOnMouseClicked(new EventHandler <MouseEvent> () {
