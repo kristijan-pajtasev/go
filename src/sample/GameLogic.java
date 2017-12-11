@@ -46,22 +46,35 @@ class GameLogic implements GameLogicInterface {
         final int y = selectedPiece.getY();
 
         if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x - 1, y), player) || isKOMove; }
+            isKOMove = canTakeoverArea(getPiece(x - 1, y), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x + 1, y), player) || isKOMove; }
+            isKOMove = canTakeoverArea(getPiece(x + 1, y), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x, y - 1), player) || isKOMove; }
+            isKOMove = canTakeoverArea(getPiece(x, y - 1), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x, y + 1), player) || isKOMove; }// todo current piece
+            isKOMove = canTakeoverArea(getPiece(x, y + 1), selectedPiece) || isKOMove; }// todo current piece
 
         return isKOMove;
     }
 
-    private boolean canTakeoverArea(GoPiece piece, int player) {
-        return isPatchSurrounded(buildPatch(piece, piece.getPlayer()));
+    private boolean canTakeoverArea(GoPiece piece, GoPiece selectedPiece) {
+        return isPatchSurrounded(buildPatch(piece, piece.getPlayer()), selectedPiece);
+    }
+
+    private boolean isPatchSurrounded(Set<GoPiece> goPieces, GoPiece selectedPiece) {
+        boolean isSurrounded = true;
+        for(GoPiece piece: goPieces) {
+            final int x = piece.getX();
+            final int y = piece.getY();
+            if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == 0 && getPiece(x - 1, y) != selectedPiece){ isSurrounded = false; }
+            if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == 0 && getPiece(x + 1, y) != selectedPiece){ isSurrounded = false; }
+            if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == 0 && getPiece(x, y - 1) != selectedPiece){ isSurrounded = false; }
+            if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == 0 && getPiece(x, y + 1) != selectedPiece){ isSurrounded = false; }
+        }
+        return isSurrounded;
     }
 
     private void takeOpponentPieces(GoPiece selectedPiece, int player) {
