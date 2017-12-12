@@ -38,7 +38,7 @@ public class SideControl extends VBox {
     private Label lb_message;
     private Button bt_pass;
     private Button bt_offer_draw;
-    private Button bt_undo;
+    //private Button bt_undo;
     private Button bt_end_game;
 
     //display players name and scores
@@ -58,7 +58,6 @@ public class SideControl extends VBox {
     private String current_Player = "Player 1";
     private String player1_name = "Player 1";
     private String player2_name = "Player 2";
-    private String message =  "";
 
     private GoControl goControl;
 
@@ -118,7 +117,7 @@ public class SideControl extends VBox {
         lb_message = new Label("");
         bt_pass = new Button("Pass");
         bt_offer_draw = new Button("Reset");
-        bt_undo = new Button("Undo");
+        //bt_undo = new Button("Undo");
         bt_end_game = new Button("End Game");
 
         //style message label
@@ -126,18 +125,18 @@ public class SideControl extends VBox {
 
         //styling the button with css
         bt_pass.setId("action_button");
-        bt_undo.setId("action_button");
+        //bt_undo.setId("action_button");
         bt_offer_draw.setId("action_button");
         bt_end_game.setId("action_button");
 
         // adding btn to grid
         player_control.add(lb_message, 0, 0, 4, 1);
         player_control.add(bt_pass,0,1,1,1);
-        player_control.add(bt_undo,1,1,1,1);
-        player_control.add(bt_offer_draw,2, 1, 1, 1);
-        player_control.add(bt_end_game,3,1,1,1);
+        player_control.add(bt_offer_draw,1, 1, 1, 1);
+        player_control.add(bt_end_game,2,1,1,1);
+        //player_control.add(bt_undo,3,1,1,1);
 
-        player_control.setHgap(10);
+        player_control.setHgap(15);
         player_control.setVgap(40);
         player_control.setPrefSize(300, 200);
         player_control.setAlignment(Pos.CENTER);
@@ -257,6 +256,7 @@ public class SideControl extends VBox {
 
             }
         });
+
     }
 
 
