@@ -111,7 +111,7 @@ class GameLogic implements GameLogicInterface {
     private void takeOverIfSurrounded(GoPiece startPiece, int player) {
         Set<GoPiece> patch = buildPatch(startPiece, startPiece.getPiece());
         if(isPatchSurrounded(patch)){
-            updateScore(player, patch.size());
+            updateScore(player == 1 ? 2 : 1, patch.size());
             for(GoPiece piece: patch) piece.setPiece(0);
         }
     }
