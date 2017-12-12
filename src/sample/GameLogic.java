@@ -39,11 +39,9 @@ class GameLogic implements GameLogicInterface {
             for(GoPiece piece: row) piece.setForMoveLevel(move);
 
         if(isRepeatableState()) {
-            System.out.println("repetable state");
             undo();
-            throw new Exception("repetable state");
+            throw new Exception("Repeatable state");
         }
-        System.out.println("done");
     }
 
     private void undo() {
