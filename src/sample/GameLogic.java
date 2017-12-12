@@ -30,9 +30,6 @@ class GameLogic implements GameLogicInterface {
             selectedPiece.setPiece(player);
         }
 
-//        if(hasEscapeRoute(selectedPiece, patch)) {
-//        }
-
         takeOpponentPieces(selectedPiece, player);
         move++;
         for(GoPiece[] row: render)
@@ -58,7 +55,6 @@ class GameLogic implements GameLogicInterface {
     }
 
     private boolean isKOMove(GoPiece selectedPiece, Set<GoPiece> patch, int player) {
-        // todo
         boolean isKOMove = false;
         final int other = player == 1 ? 2 : 1;
         final int x = selectedPiece.getX();
@@ -74,7 +70,7 @@ class GameLogic implements GameLogicInterface {
             isKOMove = canTakeoverArea(getPiece(x, y - 1), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x, y + 1), selectedPiece) || isKOMove; }// todo current piece
+            isKOMove = canTakeoverArea(getPiece(x, y + 1), selectedPiece) || isKOMove; }
 
         return isKOMove;
     }
@@ -210,6 +206,10 @@ class GameLogic implements GameLogicInterface {
     public boolean isEndGame() {
         // todo
         return false;
+    }
+
+    public void endGame() {
+        // todo add areas to total score
     }
 
     // private method that determines who won the game
