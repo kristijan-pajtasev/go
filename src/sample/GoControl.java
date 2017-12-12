@@ -68,6 +68,11 @@ public class GoControl extends Control {
         return rb_board.get_score();
     }
 
+    //the player click on reset the game
+    public void reset(){
+        rb_board.resetGame();
+    }
+
     // private fields of a go board
     GoBoard rb_board;
     SideControl sideControl;
