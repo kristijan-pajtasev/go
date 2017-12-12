@@ -33,7 +33,8 @@ class GameLogic implements GameLogicInterface {
         takeOpponentPieces(selectedPiece, player);
         move++;
         for(GoPiece[] row: render)
-            for(GoPiece piece: row) piece.setForMoveLevel(move);
+            for(GoPiece piece: row)
+                piece.setForMoveLevel(move);
 
         if(isRepeatableState()) {
             undo();
