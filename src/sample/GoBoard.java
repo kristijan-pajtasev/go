@@ -94,31 +94,6 @@ public class GoBoard extends Pane {
 
             gameLogic.placePiece(cellx, celly, current_player);
             swapPlayers();
-
-        // if there is a piece already placed then return and do nothing
-//        if(render[cellx][celly].getPiece() != 0)
-//            return;
-//
-//        if(isSuicidePlace(cellx, celly, current_player)) return;
-//
-//        // at this point we have done all the checks and they have passed so now we can place
-//        // the piece and perform the reversing also check if the game has ended
-//        swapPiece(cellx, celly);
-//
-//        // if we get to this point then a successful move has been made so swapPiece the
-//        // players and update the scores
-//        swapPlayers();
-//        updateScores();
-////        determineEndGame();
-//
-//
-//        // print out some information
-//        System.out.println("placed at: " + cellx + ", " + celly);
-//        System.out.println("White: " + player1_score + " Black: " + player2_score);
-//        if(current_player == 1)
-//            System.out.println("current player is White");
-//        else
-//            System.out.println("current player is Black");
     }
 
     private boolean isSuicidePlace(int cellx, int celly, int player) {

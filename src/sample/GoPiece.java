@@ -65,7 +65,7 @@ class GoPiece extends Group {
     }
 
     public void setForMoveLevel(int level) {
-        if(history.size() <= level) history.add(player);
+        if(history.size() < level) history.add(player);
     }
 
     // method that will set the piece type

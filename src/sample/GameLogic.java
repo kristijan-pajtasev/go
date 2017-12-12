@@ -6,7 +6,7 @@ import java.util.Set;
 class GameLogic implements GameLogicInterface {
     private GoPiece[][] render;
     private int player1_score, player2_score;
-    int move = 1;
+    private int move = 1;
 
     GameLogic(GoPiece[][] board) {
         this.render = board;
