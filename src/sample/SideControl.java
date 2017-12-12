@@ -39,6 +39,7 @@ public class SideControl extends VBox {
     private Button bt_pass;
     private Button bt_offer_draw;
     private Button bt_undo;
+    private Button bt_end_game;
 
     //display players name and scores
     private VBox player_display;
@@ -59,9 +60,14 @@ public class SideControl extends VBox {
     private String player2_name = "Player 2";
     private String message =  "";
 
-    SideControl(){
+    private GoControl goControl;
 
+    SideControl(GoControl goControl){
+
+        this.goControl = goControl;
         initGUI();
+        goControl.setSideControl(this);
+
 
     }
 
@@ -111,21 +117,27 @@ public class SideControl extends VBox {
         player_control = new GridPane();
         lb_message = new Label("");
         bt_pass = new Button("Pass");
-        bt_offer_draw = new Button("Offer Draw");
+        bt_offer_draw = new Button("Reset");
         bt_undo = new Button("Undo");
+        bt_end_game = new Button("End Game");
+
+        //style message label
+        lb_message.setId("message");
 
         //styling the button with css
         bt_pass.setId("action_button");
         bt_undo.setId("action_button");
         bt_offer_draw.setId("action_button");
+        bt_end_game.setId("action_button");
 
         // adding btn to grid
         player_control.add(lb_message, 0, 0, 4, 1);
         player_control.add(bt_pass,0,1,1,1);
         player_control.add(bt_undo,1,1,1,1);
         player_control.add(bt_offer_draw,2, 1, 1, 1);
+        player_control.add(bt_end_game,3,1,1,1);
 
-        player_control.setHgap(15);
+        player_control.setHgap(10);
         player_control.setVgap(40);
         player_control.setPrefSize(300, 200);
         player_control.setAlignment(Pos.CENTER);
@@ -212,57 +224,96 @@ public class SideControl extends VBox {
 
     //init event
     public void init_event(){
-
-
         // Pass button event
         bt_pass.setOnAction(new EventHandler <ActionEvent>(){
             //call the compute result function calculate the result
             @Override
             public void handle(ActionEvent event) {
-                update_display();
+                update_display("");
+                goControl.pass();
             }
         });
 
 
+        bt_offer_draw.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                goControl.reset();
+                update_score_label(goControl.update_score());
+
+                //reset player label to player 1
+                if(lb_current_player.getText().equals(player2_name)){
+                    update_current_player();
+                }
+
+            }
+        });
     }
+
+
 
 
     //update display
-    public void update_display(){
+    public void update_display(String message){
+
+        lb_message.textProperty().bind(new SimpleStringProperty(message));
 
         if(message.equals("")){
 
-            //update score display
-            lb_player1_score.textProperty().bind(new SimpleIntegerProperty(score_1).asString());
-            lb_player2_score.textProperty().bind(new SimpleIntegerProperty(score_2).asString());
-
+            //update score label
+            update_score_label(goControl.update_score());
 
             //update current player label
-            if(lb_current_player.getText().equals(player1_name)){
-                current_Player = player2_name;
-            }else{
-                current_Player = player1_name;
-            }
-
-            //animation while changing player
-            ScaleTransition st = new ScaleTransition(Duration.millis(100), lb_current_player);
-            st.setByX(1f);
-            st.setByY(1f);
-            st.setCycleCount(4);
-            st.setAutoReverse(true);
-
-            st.play();
-            lb_current_player.textProperty().bind(new SimpleStringProperty(current_Player));
-
-        }else{
-
-            lb_message.textProperty().bind(new SimpleStringProperty(message));
+            update_current_player();
 
         }
 
-        //reset message
-        message = "";
     }
+
+    //public voi
+
+    // update display is no message is passed
+    public void update_display(){
+        update_display("");
+    }
+
+    //update score label using the binding
+    public void update_score_label(int [] scores){
+
+        score_1 = scores[0];
+        score_2 = scores[1];
+        //update score display
+        lb_player1_score.textProperty().bind(new SimpleIntegerProperty(score_1).asString());
+        lb_player2_score.textProperty().bind(new SimpleIntegerProperty(score_2).asString());
+    }
+
+    // update the current player pane
+    public void update_current_player(){
+
+        //update current player label
+        if(lb_current_player.getText().equals(player1_name)){
+            current_Player = player2_name;
+        }else{
+            current_Player = player1_name;
+        }
+
+        //animation while changing player
+        ScaleTransition st = new ScaleTransition(Duration.millis(100), lb_current_player);
+        st.setByX(1f);
+        st.setByY(1f);
+        st.setCycleCount(4);
+        st.setAutoReverse(true);
+
+        st.play();
+        lb_current_player.textProperty().bind(new SimpleStringProperty(current_Player));
+
+    }
+
+
+
+
+
+
 
 
     // overridden version of the resize method to give the board the correct size

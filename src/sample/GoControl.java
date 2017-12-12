@@ -22,7 +22,14 @@ public class GoControl extends Control {
             //when mouse is click get X and Y coordinate of the click
             @Override
             public void handle (MouseEvent event) {
-                rb_board.placePiece(event.getX(),event.getY());
+                try{
+                    rb_board.placePiece(event.getX(),event.getY());
+
+                    sideControl.update_display();
+                }catch (Exception e){
+                    sideControl.update_display(e.getMessage());
+                }
+
             }
 
         });
@@ -40,6 +47,10 @@ public class GoControl extends Control {
 
     }
 
+    public void setSideControl(SideControl sideControl) {
+        this.sideControl = sideControl;
+    }
+
     // overridden version of the resize method
     @Override
     public void resize(double width, double height) {
@@ -47,6 +58,22 @@ public class GoControl extends Control {
         rb_board.resize(width, height);
     }
 
+    //the player pass
+    public void pass(){
+        rb_board.pass();
+    }
+
+    //update score
+    public int [] update_score(){
+        return rb_board.get_score();
+    }
+
+    //the player click on reset the game
+    public void reset(){
+        rb_board.resetGame();
+    }
+
     // private fields of a go board
     GoBoard rb_board;
+    SideControl sideControl;
 }

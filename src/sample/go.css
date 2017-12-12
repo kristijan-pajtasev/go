@@ -73,3 +73,9 @@ Side Control CSS
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
 }
+
+#message{
+    -fx-text-fill: #ff9802;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
