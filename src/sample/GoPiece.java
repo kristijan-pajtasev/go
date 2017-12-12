@@ -143,6 +143,6 @@ class GoPiece extends Group {
 
     // private fields
     private int player;		// the player that this piece belongs to
-    private Ellipse piece;	// ellipse representing the player's piece
+    private Ellipse piece;  // ellipse representing the player's piece
     private Translate t;	// translation for the player piece
 }

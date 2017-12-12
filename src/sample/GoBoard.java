@@ -107,6 +107,8 @@ public class GoBoard extends Pane {
         resetRenders();
         initialiseRender();
 
+        gameLogic = new GameLogic(render);
+
         this.current_player = 2;
         this.player1_score = 0;
         this.player2_score = 0;
@@ -117,12 +119,15 @@ public class GoBoard extends Pane {
 
         //set the array of render to 0
         //step 9
-        for(int i = 0; i < 7; i++)
-            for(int j = 0; j < 7; j++) {
+        for(int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
                 render[i][j].setPiece(0);
             }
+        }
+
 
     }
+
 
     // private method that will initialise the background and the lines
     private void initialiseLinesBackground() {
