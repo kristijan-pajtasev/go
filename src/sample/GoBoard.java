@@ -109,7 +109,7 @@ public class GoBoard extends Pane {
 
         gameLogic = new GameLogic(render);
 
-        this.current_player = 2;
+        this.current_player = 1;
         this.player1_score = 0;
         this.player2_score = 0;
     }
@@ -276,7 +276,7 @@ public class GoBoard extends Pane {
     // in place
     private GoPiece[][] render;
     // the current player who is playing and who is his opposition
-    private int current_player = 2;
+    private int current_player = 1;
     // is the game currently in play
     private boolean in_play = true;
     // current scores of player 1 and player 2

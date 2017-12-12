@@ -111,7 +111,7 @@ class GameLogic implements GameLogicInterface {
     private void takeOverIfSurrounded(GoPiece startPiece, int player) {
         Set<GoPiece> patch = buildPatch(startPiece, startPiece.getPiece());
         if(isPatchSurrounded(patch)){
-            updateScore(player == 1 ? 2 : 1, patch.size());
+            updateScore(player == 1 ? 1 : 2, patch.size());
             for(GoPiece piece: patch) piece.setPiece(0);
         }
     }
@@ -238,7 +238,7 @@ class GameLogic implements GameLogicInterface {
     }
 
     private List<List<GoPiece>> buildFreePatches() {
-        List<GoPiece> checkedFreePieces = new ArrayList<>();
+        Set<GoPiece> checkedFreePieces = new HashSet<>();
         List<List<GoPiece>> patches = new ArrayList<>();
 
         for(GoPiece[] row: render)
@@ -248,8 +248,10 @@ class GameLogic implements GameLogicInterface {
         return patches;
     }
 
-    private List<GoPiece> buildFreePatch(List<GoPiece> checkedFreePieces, GoPiece startPiece) {
+    private List<GoPiece> buildFreePatch(Set<GoPiece> checkedFreePieces, GoPiece startPiece) {
         List<GoPiece> patch = new ArrayList<>();
+        if(checkedFreePieces.contains(startPiece)) return patch;
+        checkedFreePieces.add(startPiece);
         patch.add(startPiece);
         final int x = startPiece.getX();
         final int y = startPiece.getY();
@@ -270,9 +272,9 @@ class GameLogic implements GameLogicInterface {
     // private method that determines who won the game
     public String determineWinner() {
         if(player1_score > player2_score) {
-            return "White wins!";
-        }else if(player1_score < player2_score) {
             return "Black wins!";
+        }else if(player1_score < player2_score) {
+            return "White wins!";
         }else {
             return "Draw";
         }

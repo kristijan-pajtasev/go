@@ -78,12 +78,12 @@ class GoPiece extends Group {
 
     private void setColor(int player) {
         //choose which piece type we have
-        if(player == 1) {
+        if(player == 2) {
 
             piece.setFill(Color.WHITE);
 
 
-        }else if(player == 2) {
+        }else if(player == 1) {
 
             piece.setFill(Color.BLACK);
 
@@ -113,11 +113,11 @@ class GoPiece extends Group {
 
         if(piece.getFill() == Color.WHITE) {
 
-            player_value = 1;
+            player_value = 2;
 
         }else if(piece.getFill() == Color.BLACK) {
 
-            player_value = 2;
+            player_value = 1;
 
         }
 
