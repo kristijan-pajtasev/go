@@ -6,6 +6,7 @@ import java.util.Set;
 class GameLogic implements GameLogicInterface {
     private GoPiece[][] render;
     private int player1_score, player2_score;
+    int move = 1;
 
     GameLogic(GoPiece[][] board) {
         this.render = board;
@@ -27,15 +28,35 @@ class GameLogic implements GameLogicInterface {
             } else throw new Exception("This is suicide move");
         } else {
             selectedPiece.setPiece(player);
-
         }
 
 //        if(hasEscapeRoute(selectedPiece, patch)) {
 //        }
 
         takeOpponentPieces(selectedPiece, player);
+        move++;
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row) piece.setForMoveLevel(move);
 
+        if(isRepeatableState()) {
+            System.out.println("repetable state");
+            undo();
+            throw new Exception("repetable state");
+        }
+        System.out.println("done");
+    }
 
+    private void undo() {
+        move--;
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row) piece.undoLastMove();
+    }
+
+    private boolean isRepeatableState() {
+        boolean isRepeatableState = true;
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row) isRepeatableState = piece.isReptableState() != false && isRepeatableState;
+        return isRepeatableState;
     }
 
     private boolean isKOMove(GoPiece selectedPiece, Set<GoPiece> patch, int player) {
