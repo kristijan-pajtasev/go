@@ -234,7 +234,7 @@ public class SideControl extends VBox {
             }
         });
 
-        bt_undo.setOnAction(new EventHandler <ActionEvent>(){
+        bt_end_game.setOnAction(new EventHandler <ActionEvent>(){
             //call the compute result function calculate the result
             @Override
             public void handle(ActionEvent event) {
