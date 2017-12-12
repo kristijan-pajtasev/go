@@ -20,4 +20,6 @@ public interface GameLogicInterface {
 
     public int playerTwoScore();
 
+    public void endGame();
+
 }

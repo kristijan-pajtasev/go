@@ -5,15 +5,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.transform.Translate;
 
+import java.util.ArrayList;
+
 
 //class definition for a Go piece
 class GoPiece extends Group {
     // default constructor for the class
     private int x, y;
+    private ArrayList<Integer> history;
 
     public GoPiece(int x, int y, int player) {
         this.x = x;
         this.y = y;
+        history = new ArrayList<Integer>();
         t = new Translate();
         this.player = player;
         piece = new Ellipse();
@@ -26,6 +30,18 @@ class GoPiece extends Group {
         DropShadow ds = new DropShadow(5.0, 3.0, 3.0, Color.color(0.4, 0.4, 0.4));
         piece.setEffect(ds);
 
+    }
+
+    public boolean isReptableState() {
+        int size = history.size();
+        if(size < 5) return false;
+        return history.get(size - 1) == history.get(size - 3);
+    }
+
+    public void undoLastMove() {
+        player = history.get(history.size() - 2);
+        setColor(player);
+        history.remove(history.size() - 1);
     }
 
     // overridden version of the resize method to give the piece the correct size
@@ -48,22 +64,19 @@ class GoPiece extends Group {
 
     }
 
-    // public method that will swap the colour and type of this piece
-    public void swapPiece() {
-
-        if(piece.getFill() == Color.WHITE) {
-            piece.setFill(Color.BLACK);
-        }else {
-            piece.setFill(Color.WHITE);
-        }
-
+    public void setForMoveLevel(int level) {
+        if(history.size() < level) history.add(player);
     }
 
     // method that will set the piece type
     public void setPiece(final int type) {
 
         player = type;
+        history.add(type);
+        setColor(player);
+    }
 
+    private void setColor(int player) {
         //choose which piece type we have
         if(player == 1) {
 
@@ -78,8 +91,6 @@ class GoPiece extends Group {
             piece.setFill(Color.TRANSPARENT);
 
         }
-
-
     }
 
     // method that will set the piece type

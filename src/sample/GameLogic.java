@@ -1,11 +1,15 @@
 package sample;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 class GameLogic implements GameLogicInterface {
     private GoPiece[][] render;
     private int player1_score, player2_score;
+    private int move = 1;
+    private boolean gameOver = false;
 
     GameLogic(GoPiece[][] board) {
         this.render = board;
@@ -15,6 +19,8 @@ class GameLogic implements GameLogicInterface {
 
     @Override
     public void placePiece(int x, int y, int player) throws Exception{
+        if(gameOver) throw new Exception("Game is over");
+
         if(!getPiece(x, y).isEmpty()) throw new Exception("Place is taken");
 
         GoPiece selectedPiece = getPiece(x, y);
@@ -27,41 +33,69 @@ class GameLogic implements GameLogicInterface {
             } else throw new Exception("This is suicide move");
         } else {
             selectedPiece.setPiece(player);
-
         }
 
-//        if(hasEscapeRoute(selectedPiece, patch)) {
-//        }
-
         takeOpponentPieces(selectedPiece, player);
+        move++;
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row)
+                piece.setForMoveLevel(move);
 
+        if(isRepeatableState()) {
+            undo();
+            throw new Exception("Repeatable state");
+        }
+    }
 
+    private void undo() {
+        move--;
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row) piece.undoLastMove();
+    }
+
+    private boolean isRepeatableState() {
+        boolean isRepeatableState = true;
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row) isRepeatableState = piece.isReptableState() != false && isRepeatableState;
+        return isRepeatableState;
     }
 
     private boolean isKOMove(GoPiece selectedPiece, Set<GoPiece> patch, int player) {
-        // todo
         boolean isKOMove = false;
         final int other = player == 1 ? 2 : 1;
         final int x = selectedPiece.getX();
         final int y = selectedPiece.getY();
 
         if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x - 1, y), player) || isKOMove; }
+            isKOMove = canTakeoverArea(getPiece(x - 1, y), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x + 1, y), player) || isKOMove; }
+            isKOMove = canTakeoverArea(getPiece(x + 1, y), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x, y - 1), player) || isKOMove; }
+            isKOMove = canTakeoverArea(getPiece(x, y - 1), selectedPiece) || isKOMove; }
 
         if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == other){
-            isKOMove = canTakeoverArea(getPiece(x, y + 1), player) || isKOMove; }// todo current piece
+            isKOMove = canTakeoverArea(getPiece(x, y + 1), selectedPiece) || isKOMove; }
 
         return isKOMove;
     }
 
-    private boolean canTakeoverArea(GoPiece piece, int player) {
-        return isPatchSurrounded(buildPatch(piece, piece.getPlayer()));
+    private boolean canTakeoverArea(GoPiece piece, GoPiece selectedPiece) {
+        return isPatchSurrounded(buildPatch(piece, piece.getPlayer()), selectedPiece);
+    }
+
+    private boolean isPatchSurrounded(Set<GoPiece> goPieces, GoPiece selectedPiece) {
+        boolean isSurrounded = true;
+        for(GoPiece piece: goPieces) {
+            final int x = piece.getX();
+            final int y = piece.getY();
+            if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == 0 && getPiece(x - 1, y) != selectedPiece){ isSurrounded = false; }
+            if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == 0 && getPiece(x + 1, y) != selectedPiece){ isSurrounded = false; }
+            if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == 0 && getPiece(x, y - 1) != selectedPiece){ isSurrounded = false; }
+            if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == 0 && getPiece(x, y + 1) != selectedPiece){ isSurrounded = false; }
+        }
+        return isSurrounded;
     }
 
     private void takeOpponentPieces(GoPiece selectedPiece, int player) {
@@ -77,7 +111,7 @@ class GameLogic implements GameLogicInterface {
     private void takeOverIfSurrounded(GoPiece startPiece, int player) {
         Set<GoPiece> patch = buildPatch(startPiece, startPiece.getPiece());
         if(isPatchSurrounded(patch)){
-            updateScore(player, patch.size());
+            updateScore(player == 1 ? 2 : 1, patch.size());
             for(GoPiece piece: patch) piece.setPiece(0);
         }
     }
@@ -178,6 +212,59 @@ class GameLogic implements GameLogicInterface {
     public boolean isEndGame() {
         // todo
         return false;
+    }
+
+    private void addPatchToScore(List<GoPiece> patch){
+        boolean isConnectedToPlayerOne = false;
+        boolean isConnectedToPlayerTwo = false;
+        for(GoPiece piece: patch) {
+            isConnectedToPlayerOne = isConnectedToPlayer(piece, 1) || isConnectedToPlayerOne;
+            isConnectedToPlayerTwo = isConnectedToPlayer(piece, 2) || isConnectedToPlayerTwo;
+        }
+
+        if(!isConnectedToPlayerOne && isConnectedToPlayerTwo) player2_score += patch.size();
+        if(isConnectedToPlayerOne && !isConnectedToPlayerTwo) player1_score += patch.size();
+    }
+
+    private boolean isConnectedToPlayer(GoPiece piece, int player) {
+        boolean isConnectedToPlayer = false;
+        final int x = piece.getX();
+        final int y = piece.getY();
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == player) isConnectedToPlayer = true;
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == player) isConnectedToPlayer = true;
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == player) isConnectedToPlayer = true;
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == player) isConnectedToPlayer = true;
+        return isConnectedToPlayer;
+    }
+
+    private List<List<GoPiece>> buildFreePatches() {
+        List<GoPiece> checkedFreePieces = new ArrayList<>();
+        List<List<GoPiece>> patches = new ArrayList<>();
+
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row)
+                if(piece.getPiece() == 0 && !checkedFreePieces.contains(piece))
+                    patches.add(buildFreePatch(checkedFreePieces, piece));
+        return patches;
+    }
+
+    private List<GoPiece> buildFreePatch(List<GoPiece> checkedFreePieces, GoPiece startPiece) {
+        List<GoPiece> patch = new ArrayList<>();
+        patch.add(startPiece);
+        final int x = startPiece.getX();
+        final int y = startPiece.getY();
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x - 1, y)));
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x + 1, y)));
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x, y - 1)));
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x, y + 1)));
+        checkedFreePieces.addAll(patch);
+        return patch;
+    }
+
+    public void endGame() {
+        List<List<GoPiece>> patches = buildFreePatches();
+        for(List<GoPiece> patch: patches) addPatchToScore(patch);
+        gameOver = true;
     }
 
     // private method that determines who won the game
