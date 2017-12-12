@@ -254,6 +254,10 @@ public class GoBoard extends Pane {
         return scores;
     }
 
+    public void endGame() {
+        gameLogic.endGame();
+    }
+
     // private fields that make the reversi board work
     // rectangle that makes the background of the board
     private Rectangle background;

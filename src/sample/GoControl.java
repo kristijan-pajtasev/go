@@ -68,6 +68,10 @@ public class GoControl extends Control {
         return rb_board.get_score();
     }
 
+    public void endGame() {
+        rb_board.endGame();
+    }
+
     // private fields of a go board
     GoBoard rb_board;
     SideControl sideControl;

@@ -1,6 +1,8 @@
 package sample;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 class GameLogic implements GameLogicInterface {
@@ -212,8 +214,57 @@ class GameLogic implements GameLogicInterface {
         return false;
     }
 
+    private void addPatchToScore(List<GoPiece> patch){
+        boolean isConnectedToPlayerOne = false;
+        boolean isConnectedToPlayerTwo = false;
+        for(GoPiece piece: patch) {
+            isConnectedToPlayerOne = isConnectedToPlayer(piece, 1) || isConnectedToPlayerOne;
+            isConnectedToPlayerTwo = isConnectedToPlayer(piece, 2) || isConnectedToPlayerTwo;
+        }
+
+        if(!isConnectedToPlayerOne && isConnectedToPlayerTwo) player2_score += patch.size();
+        if(isConnectedToPlayerOne && !isConnectedToPlayerTwo) player1_score += patch.size();
+    }
+
+    private boolean isConnectedToPlayer(GoPiece piece, int player) {
+        boolean isConnectedToPlayer = false;
+        final int x = piece.getX();
+        final int y = piece.getY();
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == player) isConnectedToPlayer = true;
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == player) isConnectedToPlayer = true;
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == player) isConnectedToPlayer = true;
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == player) isConnectedToPlayer = true;
+        return isConnectedToPlayer;
+    }
+
+    private List<List<GoPiece>> buildFreePatches() {
+        List<GoPiece> checkedFreePieces = new ArrayList<>();
+        List<List<GoPiece>> patches = new ArrayList<>();
+
+        for(GoPiece[] row: render)
+            for(GoPiece piece: row)
+                if(piece.getPiece() == 0 && !checkedFreePieces.contains(piece))
+                    patches.add(buildFreePatch(checkedFreePieces, piece));
+        return patches;
+    }
+
+    private List<GoPiece> buildFreePatch(List<GoPiece> checkedFreePieces, GoPiece startPiece) {
+        List<GoPiece> patch = new ArrayList<>();
+        patch.add(startPiece);
+        final int x = startPiece.getX();
+        final int y = startPiece.getY();
+        if(isValidIndex(x - 1, y) && getPiece(x - 1, y).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x - 1, y)));
+        if(isValidIndex(x + 1, y) && getPiece(x + 1, y).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x + 1, y)));
+        if(isValidIndex(x, y - 1) && getPiece(x, y - 1).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x, y - 1)));
+        if(isValidIndex(x, y + 1) && getPiece(x, y + 1).getPiece() == 0) patch.addAll(buildFreePatch(checkedFreePieces, getPiece(x, y + 1)));
+        checkedFreePieces.addAll(patch);
+        return patch;
+    }
+
     public void endGame() {
-        // todo add areas to total score
+        List<List<GoPiece>> patches = buildFreePatches();
+        for(List<GoPiece> patch: patches) addPatchToScore(patch);
+        gameOver = true;
     }
 
     // private method that determines who won the game
