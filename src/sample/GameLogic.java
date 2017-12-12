@@ -7,6 +7,7 @@ class GameLogic implements GameLogicInterface {
     private GoPiece[][] render;
     private int player1_score, player2_score;
     private int move = 1;
+    private boolean gameOver = false;
 
     GameLogic(GoPiece[][] board) {
         this.render = board;
@@ -16,6 +17,8 @@ class GameLogic implements GameLogicInterface {
 
     @Override
     public void placePiece(int x, int y, int player) throws Exception{
+        if(gameOver) throw new Exception("Game is over");
+
         if(!getPiece(x, y).isEmpty()) throw new Exception("Place is taken");
 
         GoPiece selectedPiece = getPiece(x, y);
