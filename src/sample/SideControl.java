@@ -19,7 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import javafx.animation.RotateTransition;
 import javafx.util.Duration;
 import javafx.animation.ScaleTransition;
 import javafx.scene.effect.InnerShadow;
@@ -228,8 +227,13 @@ public class SideControl extends VBox {
             //call the compute result function calculate the result
             @Override
             public void handle(ActionEvent event) {
-                update_display("");
-                goControl.pass();
+
+                try {
+                    goControl.pass();
+                    update_display("");
+                } catch (Exception e) {
+                    update_display(e.getMessage());
+                }
             }
         });
 

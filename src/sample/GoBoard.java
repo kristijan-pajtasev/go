@@ -87,13 +87,16 @@ public class GoBoard extends Pane {
         final int cellx = (int) (x / cell_width);
         final int celly = (int) (y / cell_height);
 
-        // if the game is not in play then do nothing
-        if(!in_play)
-            return;
+        // if the game is not in play then throw an exception which display game over
+        if(!in_play)throw new Exception("Game is over");
 
 
-            gameLogic.placePiece(cellx, celly, current_player);
-            swapPlayers();
+
+        gameLogic.placePiece(cellx, celly, current_player);
+        swapPlayers();
+
+        //initialise the passCount
+        passCount =0;
     }
 
     private boolean isSuicidePlace(int cellx, int celly, int player) {
@@ -244,7 +247,15 @@ public class GoBoard extends Pane {
 
     }
 
-    public void pass() {
+    public void pass() throws Exception {
+
+        //increment pass count and check if the player have pass 1 after another
+        // if yes Game is over
+        passCount = passCount +1;
+        if(passCount >= 2){
+            in_play = false;
+        }
+        if(passCount >=2)throw new Exception("Game is over");
         swapPlayers();
         // todo: implement setting passCount and check end game, then swap
     }

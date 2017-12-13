@@ -59,7 +59,7 @@ public class GoControl extends Control {
     }
 
     //the player pass
-    public void pass(){
+    public void pass() throws Exception {
         rb_board.pass();
     }
 
