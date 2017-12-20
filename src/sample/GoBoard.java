@@ -110,6 +110,8 @@ public class GoBoard extends Pane {
         resetRenders();
         initialiseRender();
 
+        in_play = true;
+        passCount = 0;
         gameLogic = new GameLogic(render);
 
         this.current_player = 1;

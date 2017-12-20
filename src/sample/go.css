@@ -79,3 +79,21 @@ Side Control CSS
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
+
+#rulesPopup label {
+    -fx-font-weight: bold;
+}
+
+#rulesPopup {
+    -fx-background-color: #fff;
+    -fx-padding: 5px;
+}
+
+#titleLabel {
+    -fx-font-weight: bold;
+    -fx-spacing: 15px;
+}
+
+#closeButton {
+    -fx-border: none;
+}

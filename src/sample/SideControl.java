@@ -5,12 +5,14 @@ package sample;
  * 03/12/2017.
  */
 
+import com.sun.javafx.font.freetype.HBGlyphLayout;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
@@ -18,7 +20,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.ScaleTransition;
 import javafx.scene.effect.InnerShadow;
@@ -39,6 +44,7 @@ public class SideControl extends VBox {
     private Button bt_offer_draw;
     //private Button bt_undo;
     private Button bt_end_game;
+    private Button bt_rules;
 
     //display players name and scores
     private VBox player_display;
@@ -59,6 +65,8 @@ public class SideControl extends VBox {
     private String player2_name = "Player 2";
 
     private GoControl goControl;
+    private Popup popup;
+    private Stage primaryStage;
 
     SideControl(GoControl goControl){
 
@@ -66,7 +74,10 @@ public class SideControl extends VBox {
         initGUI();
         goControl.setSideControl(this);
 
+    }
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 
     //initialise GUI for sidecontrol
@@ -85,6 +96,58 @@ public class SideControl extends VBox {
 
         //init event
         init_event();
+
+        init_popup();
+    }
+
+    private void init_popup() {
+        popup = new Popup();
+        popup.centerOnScreen();
+        VBox vb = new VBox();
+        vb.setId("rulesPopup");
+        HBox titleBox = new HBox();
+        Button btn_close = new Button("Close");
+        btn_close.setId("closeButton");
+        titleBox.setAlignment(Pos.CENTER_RIGHT);
+        titleBox.getChildren().addAll(btn_close);
+        vb.getChildren().add(titleBox);
+
+        Label placePieceLabel = new Label("Placing piece:");
+        placePieceLabel.setId("titleLabel");
+        vb.getChildren().add(placePieceLabel);
+        vb.getChildren().add(new Label("Place piece by clicking on any vertical and horizontal line intersection"));
+
+        Label passLabel = new Label("Passing:");
+        passLabel.setId("titleLabel");
+        vb.getChildren().add(passLabel);
+        vb.getChildren().add(new Label("Pass your turn by clicking on a 'Pass' button"));
+
+        Label newGameLabel = new Label("Start new game::");
+        newGameLabel.setId("titleLabel");
+        vb.getChildren().add(newGameLabel);
+        vb.getChildren().add(new Label("Start new game by clicking 'Reset' button"));
+
+        Label rulesLabel = new Label("Game rules:");
+        rulesLabel.setId("titleLabel");
+        vb.getChildren().add(rulesLabel);
+        vb.getChildren()
+                .add(new Label("https://en.wikipedia.org/wiki/Rules_of_Go#Explanation_of_the_basic_rules"));
+        popup.getContent().addAll(vb);
+
+        bt_rules.setOnAction(new EventHandler <ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                popup.show(primaryStage);
+            }
+        });
+
+        btn_close.setOnAction(new EventHandler <ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                popup.hide();
+            }
+        });
+
 
     }
 
@@ -115,6 +178,7 @@ public class SideControl extends VBox {
         player_control = new GridPane();
         lb_message = new Label("");
         bt_pass = new Button("Pass");
+        bt_rules = new Button("Rules");
         bt_offer_draw = new Button("Reset");
         //bt_undo = new Button("Undo");
         bt_end_game = new Button("End Game");
@@ -127,12 +191,14 @@ public class SideControl extends VBox {
         //bt_undo.setId("action_button");
         bt_offer_draw.setId("action_button");
         bt_end_game.setId("action_button");
+        bt_rules.setId("action_button");
 
         // adding btn to grid
         player_control.add(lb_message, 0, 0, 4, 1);
         player_control.add(bt_pass,0,1,1,1);
         player_control.add(bt_offer_draw,1, 1, 1, 1);
         player_control.add(bt_end_game,2,1,1,1);
+        player_control.add(bt_rules,3,1,1,1);
         //player_control.add(bt_undo,3,1,1,1);
 
         player_control.setHgap(15);
@@ -222,7 +288,7 @@ public class SideControl extends VBox {
 
     //init event
     public void init_event(){
-        // Pass button event
+
         bt_pass.setOnAction(new EventHandler <ActionEvent>(){
             //call the compute result function calculate the result
             @Override
@@ -252,7 +318,7 @@ public class SideControl extends VBox {
             public void handle(ActionEvent event) {
                 goControl.reset();
                 update_score_label(goControl.update_score());
-
+                update_display();
                 //reset player label to player 1
                 if(lb_current_player.getText().equals(player2_name)){
                     update_current_player();

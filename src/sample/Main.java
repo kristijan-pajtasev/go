@@ -24,6 +24,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         // set title scene and display scene
+        side_control.setPrimaryStage(primaryStage);
         primaryStage.setTitle("Go");
         Scene scene = new Scene(sp_mainlayout, 900, 600);
         scene.getStylesheets().addAll(this.getClass().getResource("go.css").toExternalForm());
@@ -40,5 +41,5 @@ public class Main extends Application {
     // private fields for a stack pane and a go control
     private HBox sp_mainlayout;
     private GoControl go;
-    private SideControl side_control;;
+    private SideControl side_control;
 }
