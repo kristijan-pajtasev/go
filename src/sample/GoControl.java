@@ -68,7 +68,7 @@ public class GoControl extends Control {
         return rb_board.get_score();
     }
 
-    public void endGame() {
+    public void endGame() throws Exception  {
         rb_board.endGame();
     }
 

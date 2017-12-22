@@ -270,7 +270,7 @@ public class GoBoard extends Pane {
         return scores;
     }
 
-    public void endGame() {
+    public void endGame() throws Exception  {
         gameLogic.endGame();
     }
 

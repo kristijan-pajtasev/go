@@ -261,10 +261,11 @@ class GameLogic implements GameLogicInterface {
         return patch;
     }
 
-    public void endGame() {
+    public void endGame()throws Exception  {
         List<List<GoPiece>> patches = buildFreePatches();
         for(List<GoPiece> patch: patches) addPatchToScore(patch);
         gameOver = true;
+        if(gameOver)throw new Exception("Game is over");
     }
 
     // private method that determines who won the game

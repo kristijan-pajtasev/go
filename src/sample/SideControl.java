@@ -241,8 +241,13 @@ public class SideControl extends VBox {
             //call the compute result function calculate the result
             @Override
             public void handle(ActionEvent event) {
-                goControl.endGame();
-                update_display();
+
+                try {
+                    goControl.endGame();
+
+                } catch (Exception e) {
+                    update_display(e.getMessage());
+                }
             }
         });
 

@@ -20,6 +20,6 @@ public interface GameLogicInterface {
 
     public int playerTwoScore();
 
-    public void endGame();
+    public void endGame()throws Exception ;
 
 }
